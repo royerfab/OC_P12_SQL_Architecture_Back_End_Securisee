@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\fabie\Documents\Informatique\Projets\OC_Projet_12\OC_12_test\venv
+set VIRTUAL_ENV=C:\Users\fabie\Documents\Informatique\Projets\OC_Projet_12\OC_12_SQL_architecture_back_end_securisee\venv
 
 if not defined PROMPT set PROMPT=$P$G
 
