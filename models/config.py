@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship, sessionmaker
 
 
 engine = create_engine('sqlite:///database.db', echo = False)
-conn = engine.connect() 
+conn = engine.connect()
 
 Session = sessionmaker(bind=engine)
 session = Session()

@@ -27,17 +27,17 @@ class ContractView:
             print("Status:", contract.status)
             print("---------------------------------------")
     
-    def get_contract_id(self):
-        choice = self.input.input_in_array_of_int("Entrer l'id du contrat concerné : ")
+    def get_contract_id(self, contract_id_list):
+        choice = self.input.input_in_array_of_int("Entrer l'id du contrat concerné : ", contract_id_list)
         return choice
     #pourquoi les or?
     def update_contract(self, contract):
         print("Taper Entrée pour conserver la valeur sans modification")
-        client_id = self.input.check_int(f"Client ID ({contract.client_id}) : ") or contract.client_id
-        client_informations = self.input.check_string(f"Client Informations ({contract.client_informations}) : ") or contract.client_informations
-        sales_person = self.input.check_string(f"Sales Person ({contract.sales_person}) : ") or contract.sales_person
-        total_amount = self.input.check_int(f"Total Amount ({contract.total_amount}) : ") or contract.total_amount
-        remaining_amount = self.input.check_int(f"Remaining Amount ({contract.remaining_amount}) : ") or contract.remaining_amount
-        creation_date = self.input.check_date(f"Creation Date ({contract.creation_date}) : ") or contract.creation_date
-        status = self.input.check_string(f"Status ({contract.status}) : ") or contract.status
+        client_id = self.input.check_int(f"Client ID ({contract.client_id}) : ", updated=True) or contract.client_id
+        client_informations = self.input.check_string(f"Client Informations ({contract.client_informations}) : ", updated=True) or contract.client_informations
+        sales_person = self.input.check_string(f"Sales Person ({contract.sales_person}) : ", updated=True) or contract.sales_person
+        total_amount = self.input.check_int(f"Total Amount ({contract.total_amount}) : ", updated=True) or contract.total_amount
+        remaining_amount = self.input.check_int(f"Remaining Amount ({contract.remaining_amount}) : ", updated=True) or contract.remaining_amount
+        creation_date = self.input.check_date(f"Creation Date ({contract.creation_date}) : ", updated=True) or contract.creation_date
+        status = self.input.check_int(f"Status ({contract.status}) : ", updated=True) or contract.status
         return client_id, client_informations, sales_person, total_amount, remaining_amount, creation_date, status

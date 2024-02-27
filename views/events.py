@@ -31,19 +31,19 @@ class EventView:
             print("Notes:", event.notes)
             print("---------------------------------------")
     
-    def get_event_id(self):
-        choice = self.input.input_in_array_of_int("Entrer l'id de l'événement concerné : ")
+    def get_event_id(self, event_id_list):
+        choice = self.input.input_in_array_of_int("Entrer l'id de l'événement concerné : ", event_id_list)
         return choice
+    
+    def get_event_support_id(self, support_id_list):
+        choice = self.input.input_in_array_of_int("Entrer l'id du contact support : ", support_id_list)
+        return choice   
     
     def update_event(self, event):
         print("Taper Entrée pour conserver la valeur sans modification")
-        contract_id = self.input.check_int(f"Contract ID ({event.contract_id}) : ") or event.contract_id
-        name = self.input.check_string(f"Name ({event.name}) : ") or event.name
-        client_name = self.input.check_string(f"Client Name ({event.client_name}) : ") or event.client_name
-        client_contact = self.input.check_string(f"Client Contact ({event.client_contact}) : ") or event.client_contact
-        start_date = self.input.check_date(f"Start Date ({event.start_date}) : ") or event.start_date
-        support_contact = self.input.check_string(f"Support Contact ({event.support_contact}) : ") or event.support_contact
-        location = self.input.check_string(f"Location ({event.location}) : ") or event.location
-        attendees = self.input.check_int(f"Attendees ({event.attendees}) : ") or event.attendees
-        notes = self.input.check_string(f"Notes ({event.notes}) : ") or event.notes
-        return contract_id, name, client_name, client_contact, start_date, support_contact, location, attendees, notes
+        name = self.input.check_string(f"Name ({event.name}) : ", updated=True) or event.name
+        start_date = self.input.check_date(f"Start Date ({event.start_date}) : ", updated=True) or event.start_date
+        location = self.input.check_string(f"Location ({event.location}) : ", updated=True) or event.location
+        attendees = self.input.check_int(f"Attendees ({event.attendees}) : ", updated=True) or event.attendees
+        notes = self.input.check_string(f"Notes ({event.notes}) : ", updated=True) or event.notes
+        return name, start_date, location, attendees, notes

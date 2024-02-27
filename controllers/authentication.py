@@ -52,18 +52,21 @@ class AuthenticationController:
 
     def is_manager(self):
         current_user = self.get_current_user()
-        if current_user and current_user.role == RoleEnum.GESTION:
+        if current_user and current_user.role == RoleEnum.GESTION.value:
             return current_user
         return None
     
     def is_sales_person(self):
         current_user = self.get_current_user()
-        if current_user and current_user.role == RoleEnum.COMMERCIAL:
+        if current_user and current_user.role == RoleEnum.COMMERCIAL.value:
             return current_user
         return None
     
     def is_support(self):
         current_user = self.get_current_user()
-        if current_user and current_user.role == RoleEnum.SUPPORT:
+        if current_user and current_user.role == RoleEnum.SUPPORT.value:
             return current_user
         return None
+    
+    def is_sales_or_manager(self):
+        return self.is_manager() or self.is_sales_person()

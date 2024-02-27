@@ -33,7 +33,9 @@ class UserController:
     @manager_required
     def update_user(self):
         self.display_users()
-        user_id = self.user_view.get_user_id()
+        users = session.query(User).all()
+        user_id_list = [user.id for user in users]
+        user_id = self.user_view.get_user_id(user_id_list)
         user = session.query(User).filter_by(id = user_id).first()
         username, password, role = self.user_view.update_user(user)
         user.username = username

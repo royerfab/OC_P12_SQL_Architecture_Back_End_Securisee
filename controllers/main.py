@@ -46,32 +46,38 @@ class MainController:
     def client_manager(self):
         choice = self.menu_view.client_menu()
         if choice == 1:
-            self.user_controller.create_client()
+            self.client_controller.create_client()
         elif choice == 2:
-            self.user_controller.update_client()
+            self.client_controller.update_client()
         elif choice == 3:
-            self.user_controller.delete_client()
+            self.client_controller.delete_client()
         elif choice == 4:
-            self.user_controller.display_clients()
+            self.client_controller.display_clients()
 
     def contract_manager(self):
         choice = self.menu_view.contract_menu()
         if choice == 1:
-            self.user_controller.create_contract()
+            self.contract_controller.create_contract()
         elif choice == 2:
-            self.user_controller.update_contract()
+            self.contract_controller.update_contract()
         elif choice == 3:
-            self.user_controller.delete_contract()
+            self.contract_controller.delete_contract()
         elif choice == 4:
-            self.user_controller.display_contracts()
+            self.contract_controller.display_contracts()
 
     def event_manager(self):
         choice = self.menu_view.event_menu()
         if choice == 1:
-            self.user_controller.create_event()
+            self.event_controller.create_event()
         elif choice == 2:
-            self.user_controller.update.event()
+            self.event_controller.update.event()
         elif choice == 3:
-            self.user_controller.delete_event()
+            self.event_controller.delete_event()
         elif choice == 4:
-            self.user_controller.display_events()
+            self.event_controller.display_events()
+        elif choice == 5:
+            self.event_controller.display_events_no_support()
+        elif choice == 6:
+            self.event_controller.display_events_by_support()
+        elif choice == 7:
+            self.event_controller.update_event_contact_support()
