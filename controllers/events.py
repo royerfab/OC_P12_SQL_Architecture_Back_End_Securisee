@@ -11,6 +11,9 @@ class EventController:
         self.event_view = EventView()
         self.auth_controller = AuthenticationController()
 
+    #Création d'un événement uniquement par un commercial, pour un de ses clients et si le contrat est signé
+    #On filtre les contrats en récupérant l'id du contrat puis son client puis l'id de son commercial, s'il est le même que le commercial connecté alors c'est bon
+    #if status vérifie qu'il soit True dans la base de donnée MySQL
     @login_required
     @sales_required
     def create_event(self):
@@ -60,6 +63,7 @@ class EventController:
             return None
 
     @login_required
+    @manager_required
     def display_events_no_support(self):
         events = session.query(Event).filter_by(support_id = None)
         if events.count() >0:   
@@ -69,6 +73,7 @@ class EventController:
             return None
         
     @login_required
+    @support_required
     def display_events_by_support(self):
         current_user = self.auth_controller.get_current_user()
         events = session.query(Event).filter_by(support_id = current_user.id)

@@ -11,8 +11,8 @@ class UserController:
         self.user_view = UserView()
         self.auth_controller = AuthenticationController()
 
-    # @login_required
-    # @manager_required
+    @login_required
+    @manager_required
     def create_user(self):
         username, password, role = self.user_view.get_user_data()
         new_user = User(

@@ -10,7 +10,7 @@ class ClientController:
         self.client_view = ClientView()
         self.auth_controller = AuthenticationController()
 
-    #Associe automatiquement un commercial au client qu'il a créé.
+    #Associe automatiquement un commercial au client qu'il a créé en utilisant get_current_user pour le sales_contact_id.
     @login_required
     @sales_required
     def create_client(self):
@@ -51,7 +51,7 @@ class ClientController:
         else:
             return None
 
-    # Permet de voir les clients d'un commercial pour qu'il soit le seul à les modifier.
+    # Permet de voir les clients d'un commercial pour qu'il soit le seul à les modifier en utilisant display_my_clients.
     # On peut également avoir la liste des id des clients pour ne pas sélectionner un un id n'existant pas dans get_client_id.
     @login_required
     @sales_required

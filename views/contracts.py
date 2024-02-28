@@ -35,7 +35,7 @@ class ContractView:
     def get_contract_id(self, contract_id_list):
         choice = self.input.input_in_array_of_int("Entrer l'id du contrat concerné : ", contract_id_list)
         return choice
-    #pourquoi les or?
+
     def update_contract(self, contract):
         print("Taper Entrée pour conserver la valeur sans modification")
         total_amount = self.input.check_int(f"Total Amount ({contract.total_amount}) : ", updated=True) or contract.total_amount

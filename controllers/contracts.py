@@ -10,7 +10,7 @@ class ContractController:
         self.contract_view = ContractView()
         self.auth_controller = AuthenticationController()
 
-    # Ici on récupère l'id du sales_contact du client en demandant d'abord l'id du client'
+    # Ici on récupère l'id du sales_contact du client en demandant d'abord l'id du client pour récupérer le client'
     @login_required
     @manager_required
     def create_contract(self):
@@ -43,11 +43,13 @@ class ContractController:
         self.contract_view.display_contracts(contracts)
 
     @login_required
+    @sales_required
     def display_not_signed_contracts(self):
         contracts = session.query(Contract).filter(Contract.status!=True)
         self.contract_view.display_contracts(contracts)
 
     @login_required
+    @sales_required
     def display_not_paid_contracts(self):
         contracts = session.query(Contract).filter(Contract.remaining_amount != 0)
         self.contract_view.display_contracts(contracts)
@@ -68,6 +70,8 @@ class ContractController:
         else:
             return None
 
+    #Modifie le contrat selon le trie effectué avec display_my_contracts, le sales modifie que ses contrats,
+    #le manager modifie tout
     @login_required
     @sales_or_manager_required
     def update_contract(self):

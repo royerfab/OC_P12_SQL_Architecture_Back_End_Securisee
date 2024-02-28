@@ -69,10 +69,10 @@ class Contract(Base):
     status = Column(Boolean, default= False)
 
     def __str__(self):
-        return f'{self.id} - {self.total_amount} / {self.remaining_amount} / {self.status}'
+        return f'{self.id} - client : {self.client} / {self.total_amount} / {self.remaining_amount} / {self.status}'
 
     def __repr__(self):
-        return f'{self.id} - {self.total_amount} / {self.remaining_amount} / {self.status}'
+        return f'{self.id} - client :{self.client} / {self.total_amount} / {self.remaining_amount} / {self.status}'
 
 class Event(Base):
     __tablename__ = 'events'
