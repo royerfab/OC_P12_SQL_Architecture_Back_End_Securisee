@@ -49,6 +49,12 @@ class Client(Base):
     sales_contact_id = Column(Integer, ForeignKey("users.id"))
     sales_contact = relationship("User")
 
+    def __str__(self):
+        return f'{self.id} - {self.name} / {self.email}'
+
+    def __repr__(self):
+        return f'{self.id} - {self.name} / {self.email}'
+
 class Contract(Base):
     __tablename__ = 'contracts'
 
@@ -61,6 +67,12 @@ class Contract(Base):
     remaining_amount = Column(Integer)
     created_at = Column(DateTime, default=datetime.now)
     status = Column(Boolean, default= False)
+
+    def __str__(self):
+        return f'{self.id} - {self.total_amount} / {self.remaining_amount} / {self.status}'
+
+    def __repr__(self):
+        return f'{self.id} - {self.total_amount} / {self.remaining_amount} / {self.status}'
 
 class Event(Base):
     __tablename__ = 'events'

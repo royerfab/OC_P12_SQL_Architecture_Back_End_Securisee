@@ -1,5 +1,5 @@
 from models.config import session
-from models.models import Event, User
+from models.models import Event, User, Contract
 from views.events import EventView
 from utils.decorators import login_required, manager_required, sales_required, support_required, sales_or_manager_required
 from .authentication import AuthenticationController
@@ -14,6 +14,7 @@ class EventController:
     @login_required
     @sales_required
     def create_event(self):
+        current_user = self.auth_controller.get_current_user()
         (
             contract_id,
             name,
@@ -25,17 +26,21 @@ class EventController:
         ) = self.event_view.get_event_data()
         event_date_start = datetime.strptime(event_date_start, "%Y-%m-%d")
         event_date_end = datetime.strptime(event_date_end, "%Y-%m-%d")
-        new_event = Event(
-            contract_id=contract_id,
-            name=name,
-            event_date_start=event_date_start,
-            event_date_end=event_date_end,
-            location=location,
-            attendees=attendees,
-            notes=notes,
-        )
-        session.add(new_event)
-        session.commit()
+        contract = session.query(Contract).filter_by(id=contract_id).first()
+        if contract.status and contract.client.sales_contact_id == current_user.id:
+            new_event = Event(
+                contract_id=contract_id,
+                name=name,
+                event_date_start=event_date_start,
+                event_date_end=event_date_end,
+                location=location,
+                attendees=attendees,
+                notes=notes,
+            )
+            session.add(new_event)
+            session.commit()
+        else:
+            print("Le contrat sélectionné n'est pas signé ou ce n'est pas votre client")
 
     @login_required
     def display_events(self):
@@ -75,6 +80,8 @@ class EventController:
 
     #Je prends les événements avec display_event_no_support, je récupère les événements, je choisi le support en récupérant les user avec query,
     # je modifie les events avec event.support_id pour assigner le support à l'event
+    @login_required
+    @manager_required
     def update_event_contact_support(self):
         events = self.display_events_no_support()
         if events:

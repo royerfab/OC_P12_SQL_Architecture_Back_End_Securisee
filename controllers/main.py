@@ -63,7 +63,16 @@ class MainController:
         elif choice == 3:
             self.contract_controller.delete_contract()
         elif choice == 4:
+            self.contract_display_manager()
+
+    def contract_display_manager(self):
+        choice = self.menu_view.contract_display_menu()
+        if choice == 1:
             self.contract_controller.display_contracts()
+        elif choice == 2:
+            self.contract_controller.display_not_signed_contracts()
+        elif choice == 3:
+            self.contract_controller.display_not_paid_contracts()
 
     def event_manager(self):
         choice = self.menu_view.event_menu()

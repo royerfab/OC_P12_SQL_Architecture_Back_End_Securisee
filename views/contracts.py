@@ -1,4 +1,6 @@
 from .errorview import InputCheckView
+from rich.console import Console
+from rich.table import Table
 
 
 class ContractView:
@@ -13,15 +15,22 @@ class ContractView:
         return total_amount, remaining_amount, status, client_id
     
     def display_contracts(self, contracts):
+        table = Table(title = "Liste des contrats")
+        table.add_column("Contrat id")
+        table.add_column("Client")
+        table.add_column("Sales contact")
+        table.add_column("Total amount")
+        table.add_column("Remaining amount")
+        table.add_column("Created at")
+        table.add_column("Status")
+      
         for contract in contracts:
-            print("Contract ID:", contract.id)
-            print("Client ID:", contract.client)
-            print("Sales Person:", contract.sales_contact)
-            print("Total Amount:", contract.total_amount)
-            print("Remaining Amount:", contract.remaining_amount)
-            print("Creation Date:", contract.created_at)
-            print("Status:", contract.status)
-            print("---------------------------------------")
+            status = "✅" if contract.status else "❌"
+            table.add_row(str(contract.id), str(contract.client), str(contract.sales_contact), str(contract.total_amount),
+                          str(contract.remaining_amount), str(contract.created_at), status)
+
+        console = Console()
+        console.print(table)
     
     def get_contract_id(self, contract_id_list):
         choice = self.input.input_in_array_of_int("Entrer l'id du contrat concerné : ", contract_id_list)
@@ -30,6 +39,7 @@ class ContractView:
     def update_contract(self, contract):
         print("Taper Entrée pour conserver la valeur sans modification")
         total_amount = self.input.check_int(f"Total Amount ({contract.total_amount}) : ", updated=True) or contract.total_amount
-        remaining_amount = self.input.check_int(f"Remaining Amount ({contract.remaining_amount}) : ", updated=True) or contract.remaining_amount
+        remaining_amount = input(f"Remaining Amount ({contract.remaining_amount}) : ")
         status = self.input.status_option()
         return total_amount, remaining_amount, status
+    

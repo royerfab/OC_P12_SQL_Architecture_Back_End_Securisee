@@ -42,6 +42,16 @@ class ContractController:
         contracts = session.query(Contract).all()
         self.contract_view.display_contracts(contracts)
 
+    @login_required
+    def display_not_signed_contracts(self):
+        contracts = session.query(Contract).filter(Contract.status!=True)
+        self.contract_view.display_contracts(contracts)
+
+    @login_required
+    def display_not_paid_contracts(self):
+        contracts = session.query(Contract).filter(Contract.remaining_amount != 0)
+        self.contract_view.display_contracts(contracts)
+
     #Affiche les contrats d'un commercial, si c'est celui qui est connecté (avec is_sales_person).
     @login_required
     @sales_or_manager_required
@@ -72,9 +82,9 @@ class ContractController:
                 status,
             ) = self.contract_view.update_contract(contract)
             contract.total_amount = total_amount
-            contract.remaining_amount = remaining_amount
+            if remaining_amount:
+                contract.remaining_amount = int(remaining_amount)
             contract.status = status
-            print(contract.status)
             session.commit()
         else:
             print("Vous n'avez pas de contrat.")

@@ -35,8 +35,15 @@ class MenuView:
         print("1. Créer un nouveau contrat")
         print("2. Modifier un contrat")
         print("3. Supprimer un contrat")
-        print("4. Afficher la liste des contrats")
+        print("4. Afficher les contrats")
         choice = self.input.input_in_array_of_int(" ", range(1, 5))
+        return choice
+    
+    def contract_display_menu(self):
+        print("1. Afficher tous les contrat")
+        print("2. Afficher les contrats pas signés")
+        print("3. Afficher les contrats pas payés")
+        choice = self.input.input_in_array_of_int(" ", range(1, 4))
         return choice
 
     def event_menu(self):
