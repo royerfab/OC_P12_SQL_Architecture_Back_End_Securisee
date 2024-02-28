@@ -29,6 +29,5 @@ class UserView:
         print("Taper Entrée pour conserver la valeur sans modification")
         username = self.input.check_string(f"usernanme ({user.username}) : ", updated=True) or user.username
         password = self.input.check_string(f"password (****) : ")
-        role = self.input.role_option() or user.role
-        return username, password, role
+        return username, password
 

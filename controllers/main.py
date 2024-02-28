@@ -70,7 +70,7 @@ class MainController:
         if choice == 1:
             self.event_controller.create_event()
         elif choice == 2:
-            self.event_controller.update.event()
+            self.event_controller.update_event()
         elif choice == 3:
             self.event_controller.delete_event()
         elif choice == 4:

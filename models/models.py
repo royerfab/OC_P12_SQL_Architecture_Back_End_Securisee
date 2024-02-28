@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, DateTime
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from enum import Enum
@@ -19,7 +19,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     username = Column(String(20), unique=True, nullable=False)
-    password = Column(String, nullable=False)
+    password = Column(String(500), nullable=False)
     role = Column(String(10), nullable=False)
 
     def __str__(self):
@@ -45,7 +45,7 @@ class Client(Base):
     phone = Column(String(20))
     company_name = Column(String(100))
     created_at = Column(DateTime, default=datetime.now)
-    last_update = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    last_contact = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     sales_contact_id = Column(Integer, ForeignKey("users.id"))
     sales_contact = relationship("User")
 
@@ -55,31 +55,24 @@ class Contract(Base):
     id = Column(Integer, primary_key=True)
     client_id = Column(Integer, ForeignKey('clients.id'))
     client = relationship("Client")
-    client_informations = Column(String(500))
     sales_contact_id = Column(Integer, ForeignKey("users.id"))
     sales_contact = relationship("User")
-    sales_contact_info = Column(String(100))
     total_amount = Column(Integer)
     remaining_amount = Column(Integer)
     created_at = Column(DateTime, default=datetime.now)
-    status = Column(String(20))
+    status = Column(Boolean, default= False)
 
 class Event(Base):
     __tablename__ = 'events'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
-    client_id = Column(Integer, ForeignKey('clients.id'))
-    client = relationship("Client")
     contract_id = Column(Integer, ForeignKey('contracts.id'))
     contract = relationship("Contract")
-    support_id = Column(Integer, ForeignKey('users.id'))
+    support_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     support = relationship("User")
-    client_name = Column(String(100))
-    client_contact = Column(String(100))
-    event_date_start = Column(DateTime, default=datetime.now)
+    event_date_start = Column(DateTime)
     event_date_end = Column(DateTime)
-    support_contact = Column(String(100))
     location = Column(String(200))
     attendees = Column(Integer)
     notes = Column(String(500))

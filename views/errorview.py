@@ -18,13 +18,16 @@ class InputCheckView:
         while True:
             user_input = input(message)
             if (not updated and user_input.strip().isdigit()) or (updated and (user_input.strip().isdigit() or not user_input)):
-                return int(user_input)
+                if user_input:
+                    return int(user_input)
+                else:
+                    return user_input
             self.error_handler.display_error('Mauvais format')
 
     def check_date(self, message, updated=False):
         while True:
             user_input = input(message)
-            if (not updated and re.match(r"^\d{4}/\d{2}/\d{2}$", user_input)) or (updated and (re.match(r"^\d{4}/\d{2}/\d{2}$", user_input) or not user_input)):
+            if (not updated and re.match(r"^\d{4}-\d{2}-\d{2}$", user_input)) or (updated and (re.match(r"^\d{4}-\d{2}-\d{2}$", user_input) or not user_input)):
                 return user_input
             self.error_handler.display_error('Mauvais format')
 
@@ -38,7 +41,8 @@ class InputCheckView:
     def input_in_array_of_int(self, message, array, updated=False):
         while True:
             user_input = int(input(message))
-            if (not updated and user_input in array) or (updated and (user_input in array or not user_input in array)):
+            #if (not updated and user_input in array) or (updated and (user_input in array or not user_input in array)):
+            if user_input in array:
                 return user_input
             self.error_handler.display_error('numéro inconnu')
 
@@ -58,6 +62,16 @@ class InputCheckView:
             else:
                 self.error_handler.display_error('mauvais format')
 
+    def status_option(self):
+        while True:
+            print('Précisez si le contrat est signé : ')
+            print('1: Signé')
+            print('2: Pas signé')
+            user_input = input('Votre choix: ')
+            if user_input == '1':
+                return True
+            else:
+                return False
 
 class ErrorHandlerView:
     @staticmethod

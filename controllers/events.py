@@ -3,6 +3,7 @@ from models.models import Event, User
 from views.events import EventView
 from utils.decorators import login_required, manager_required, sales_required, support_required, sales_or_manager_required
 from .authentication import AuthenticationController
+from datetime import datetime
 
 
 class EventController:
@@ -14,29 +15,21 @@ class EventController:
     @sales_required
     def create_event(self):
         (
-            client_id,
             contract_id,
-            support_id,
             name,
-            client_name,
-            client_contact,
             event_date_start,
             event_date_end,
-            support_contact,
             location,
             attendees,
             notes,
         ) = self.event_view.get_event_data()
+        event_date_start = datetime.strptime(event_date_start, "%Y-%m-%d")
+        event_date_end = datetime.strptime(event_date_end, "%Y-%m-%d")
         new_event = Event(
-            client_id=client_id,
             contract_id=contract_id,
-            support_id=support_id,
             name=name,
-            client_name=client_name,
-            client_contact=client_contact,
             event_date_start=event_date_start,
             event_date_end=event_date_end,
-            support_contact=support_contact,
             location=location,
             attendees=attendees,
             notes=notes,
@@ -51,7 +44,7 @@ class EventController:
 
     #Affiche les événements d'un support.
     @login_required
-    @sales_required
+    @support_required
     def display_my_events(self):
         current_user = self.auth_controller.get_current_user()
         events = session.query(Event).filter_by(support_id=current_user.id)
@@ -66,9 +59,9 @@ class EventController:
         events = session.query(Event).filter_by(support_id = None)
         if events.count() >0:   
             self.event_view.display_events(events)
-            return True
+            return events
         else:
-            return False
+            return None
         
     @login_required
     def display_events_by_support(self):
@@ -80,43 +73,48 @@ class EventController:
         else:
             return None
 
-    #Je prends les événements avec display_event_no_support et je récupère les user avec query
+    #Je prends les événements avec display_event_no_support, je récupère les événements, je choisi le support en récupérant les user avec query,
+    # je modifie les events avec event.support_id pour assigner le support à l'event
     def update_event_contact_support(self):
         events = self.display_events_no_support()
         if events:
-            event_id = self.event_view.get_event_id()
+            event_id_list = [event.id for event in events]
+            event_id = self.event_view.get_event_id(event_id_list)
             contacts_support = session.query(User).filter_by(role='support')
             support_id_list = [contact_support.id for contact_support in contacts_support]
             support_id = self.event_view.get_event_support_id(support_id_list)
-            print(support_id, event_id)
+            event = session.query(Event).filter_by(id=event_id).first()
+            event.support_id = support_id
+            session.commit()
         else:
             print("Aucun événement existant sans support")
 
     @login_required
-    @sales_or_manager_required
+    @support_required
     def update_event(self):
-        events = self.display_events()
+        events = self.display_my_events()
         if events:
             event_id_list = [event.id for event in events]
             event_id = self.event_view.get_event_id(event_id_list)
             event = session.query(Event).filter_by(id=event_id).first()
             (
-                contract_id,
                 name,
-                client_name,
-                client_contact,
+                event_date_start,
                 event_date_end,
-                support_contact,
                 location,
                 attendees,
                 notes,
             ) = self.event_view.update_event(event)
-            event.contract_id = contract_id
+
+            if event_date_start:
+                event_date_start = datetime.strptime(event_date_start, "%Y-%m-%d")
+                event.event_date_start = event_date_start
+
+            if event_date_end:
+                event_date_end = datetime.strptime(event_date_end, "%Y-%m-%d")
+                event.event_date_end = event_date_end
+            
             event.name = name
-            event.client_name = client_name
-            event.client_contact = client_contact
-            event.event_date_end = event_date_end,
-            event.support_contact = support_contact
             event.location = location
             event.attendees = attendees
             event.notes = notes

@@ -11,8 +11,8 @@ class UserController:
         self.user_view = UserView()
         self.auth_controller = AuthenticationController()
 
-    @login_required
-    @manager_required
+    # @login_required
+    # @manager_required
     def create_user(self):
         username, password, role = self.user_view.get_user_data()
         new_user = User(
@@ -37,9 +37,8 @@ class UserController:
         user_id_list = [user.id for user in users]
         user_id = self.user_view.get_user_id(user_id_list)
         user = session.query(User).filter_by(id = user_id).first()
-        username, password, role = self.user_view.update_user(user)
+        username, password= self.user_view.update_user(user)
         user.username = username
-        user.role = role
         if password:
             user.password = password
             user.set_password(password)
