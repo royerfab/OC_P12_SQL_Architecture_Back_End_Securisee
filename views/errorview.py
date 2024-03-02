@@ -14,6 +14,13 @@ class InputCheckView:
                 return user_input          
             self.error_handler.display_error('Mauvais format')
 
+    def check_email(self, message, updated=False):
+        while True:
+            user_input = input(message)
+            if (not updated and re.search('^[\w\.-]+@[\w\.-]+\.\w+$', user_input)) or (updated and (re.search('^[\w\.-]+@[\w\.-]+\.\w+$', user_input) or not user_input)):
+                return user_input          
+            self.error_handler.display_error('Mauvais format')
+
     def check_int(self, message, updated=False):
         while True:
             user_input = input(message)

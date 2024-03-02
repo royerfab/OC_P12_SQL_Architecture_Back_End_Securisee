@@ -1,2 +1,5 @@
 old.py
 user.py
+venv
+__pycache__/
+key.pkl
