@@ -34,6 +34,7 @@ class ContractController:
             )
             session.add(new_contract)
             session.commit()
+            return new_contract
         else:
             print("Client inexistant.")
 
@@ -45,7 +46,7 @@ class ContractController:
     @login_required
     @sales_required
     def display_not_signed_contracts(self):
-        contracts = session.query(Contract).filter(Contract.status!=True)
+        contracts = session.query(Contract).filter(Contract.status != True)
         self.contract_view.display_contracts(contracts)
 
     @login_required
@@ -54,7 +55,7 @@ class ContractController:
         contracts = session.query(Contract).filter(Contract.remaining_amount != 0)
         self.contract_view.display_contracts(contracts)
 
-    #Affiche les contrats d'un commercial, si c'est celui qui est connecté (avec is_sales_person).
+    # Affiche les contrats d'un commercial, si c'est celui qui est connecté (avec is_sales_person).
     @login_required
     @sales_or_manager_required
     def display_my_contracts(self):
@@ -70,8 +71,8 @@ class ContractController:
         else:
             return None
 
-    #Modifie le contrat selon le trie effectué avec display_my_contracts, le sales modifie que ses contrats,
-    #le manager modifie tout
+    # Modifie le contrat selon le trie effectué avec display_my_contracts, le sales modifie que ses contrats,
+    # le manager modifie tout
     @login_required
     @sales_or_manager_required
     def update_contract(self):
@@ -97,8 +98,9 @@ class ContractController:
     @manager_required
     def delete_contract(self):
         self.display_contracts()
-        contract_id = self.contract_view.get_contract_id()
-        contract = session.query(Contract).filter_by(id = contract_id).first()
+        contracts = session.query(Contract).all()
+        contract_id_list = [contract.id for contract in contracts]
+        contract_id = self.contract_view.get_contract_id(contract_id_list)
+        contract = session.query(Contract).filter_by(id=contract_id).first()
         session.delete(contract)
         session.commit()
-            

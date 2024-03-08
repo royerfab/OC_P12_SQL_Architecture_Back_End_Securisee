@@ -10,7 +10,8 @@ class ClientController:
         self.client_view = ClientView()
         self.auth_controller = AuthenticationController()
 
-    #Associe automatiquement un commercial au client qu'il a créé en utilisant get_current_user pour le sales_contact_id.
+    # Associe automatiquement un commercial au client qu'il a créé,
+    # en utilisant get_current_user pour le sales_contact_id.
     @login_required
     @sales_required
     def create_client(self):
@@ -33,26 +34,29 @@ class ClientController:
         )
         session.add(new_client)
         session.commit()
+        return new_client
 
     @login_required
     def display_clients(self):
         clients = session.query(Client).all()
         self.client_view.display_clients(clients)
 
-    #Affiche les clients d'un commercial.
+    # Affiche les clients d'un commercial.
     @login_required
     @sales_required
     def display_my_clients(self):
         current_user = self.auth_controller.get_current_user()
         clients = session.query(Client).filter_by(sales_contact_id=current_user.id)
-        if clients.count() >0:
+        if clients.count() > 0:
             self.client_view.display_clients(clients)
             return clients
         else:
             return None
 
-    # Permet de voir les clients d'un commercial pour qu'il soit le seul à les modifier en utilisant display_my_clients.
-    # On peut également avoir la liste des id des clients pour ne pas sélectionner un un id n'existant pas dans get_client_id.
+    # Permet de voir les clients d'un commercial pour qu'il soit le seul à les modifier,
+    # en utilisant display_my_clients.
+    # On peut également avoir la liste des id des clients,
+    # pour ne pas sélectionner un id n'existant pas dans get_client_id.
     @login_required
     @sales_required
     def update_client(self):
@@ -79,8 +83,9 @@ class ClientController:
     @manager_required
     def delete_client(self):
         self.display_clients()
-        client_id = self.client_view.get_client_id()
-        client = session.query(Client).filter_by(id = client_id).first()
+        clients = session.query(Client).all()
+        client_id_list = [client.id for client in clients]
+        client_id = self.client_view.get_client_id(client_id_list)
+        client = session.query(Client).filter_by(id=client_id).first()
         session.delete(client)
         session.commit()
-

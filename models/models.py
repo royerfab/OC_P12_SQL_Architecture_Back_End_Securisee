@@ -1,18 +1,19 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship
 from enum import Enum
-from models.config import session, engine
 import bcrypt
 from datetime import datetime
 
 
 Base = declarative_base()
 
+
 class RoleEnum(Enum):
     COMMERCIAL = "commercial"
     SUPPORT = "support"
     GESTION = "gestion"
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -27,14 +28,15 @@ class User(Base):
 
     def __repr__(self):
         return f'{self.id} - {self.username} / {self.role}'
-    
-    def set_password(self, password): 
+
+    def set_password(self, password):
         # Hache le mot de passe avec bcrypt avant de le stocker
         self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    
+
     def check_password(self, password):
         # Vérifie si le mot de passe correspond au hachage stocké
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
+
 
 class Client(Base):
     __tablename__ = 'clients'
@@ -55,6 +57,7 @@ class Client(Base):
     def __repr__(self):
         return f'{self.id} - {self.name} / {self.email}'
 
+
 class Contract(Base):
     __tablename__ = 'contracts'
 
@@ -66,13 +69,14 @@ class Contract(Base):
     total_amount = Column(Integer)
     remaining_amount = Column(Integer)
     created_at = Column(DateTime, default=datetime.now)
-    status = Column(Boolean, default= False)
+    status = Column(Boolean, default=False)
 
     def __str__(self):
         return f'{self.id} - client : {self.client} / {self.total_amount} / {self.remaining_amount} / {self.status}'
 
     def __repr__(self):
         return f'{self.id} - client :{self.client} / {self.total_amount} / {self.remaining_amount} / {self.status}'
+
 
 class Event(Base):
     __tablename__ = 'events'
@@ -91,6 +95,3 @@ class Event(Base):
 
 
 meta_base = Base.metadata
-
-
-

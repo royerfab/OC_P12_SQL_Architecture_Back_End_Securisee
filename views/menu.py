@@ -42,7 +42,7 @@ class MenuView:
         print("5. Retour")
         choice = self.input.input_in_array_of_int(" ", range(1, 6))
         return choice
-    
+
     def contract_display_menu(self):
         print("1. Afficher tous les contrat")
         print("2. Afficher les contrats pas signés (commercial)")
@@ -62,4 +62,3 @@ class MenuView:
         print("8. Retour")
         choice = self.input.input_in_array_of_int(" ", range(1, 9))
         return choice
-

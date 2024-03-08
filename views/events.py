@@ -18,7 +18,7 @@ class EventView:
         return contract_id, name, event_date_start, event_date_end, location, attendees, notes
 
     def display_events(self, events):
-        table = Table(title = "Liste des événements")
+        table = Table(title="Liste des événements")
         table.add_column("Event id")
         table.add_column("Name")
         table.add_column("Contract")
@@ -28,22 +28,26 @@ class EventView:
         table.add_column("Location")
         table.add_column("Attendees")
         table.add_column("Notes")
-      
+
         for event in events:
-            table.add_row(str(event.id), str(event.name), str(event.contract), str(event.support),
-                          str(event.event_date_start), str(event.event_date_end), str(event.location), str(event.attendees), str(event.notes))
+            table.add_row(
+                str(event.id), str(event.name), str(event.contract),
+                str(event.support), str(event.event_date_start),
+                str(event.event_date_end), str(event.location), str(event.attendees), str(event.notes))
 
         console = Console()
         console.print(table)
-    
+
     def get_event_id(self, event_id_list):
-        choice = self.input.input_in_array_of_int("Entrer l'id de l'événement concerné : ", event_id_list)
+        choice = self.input.input_in_array_of_int(
+            "Entrer l'id de l'événement concerné : ", event_id_list)
         return choice
-    
+
     def get_event_support_id(self, support_id_list):
-        choice = self.input.input_in_array_of_int("Entrer l'id du contact support : ", support_id_list)
-        return choice   
-    
+        choice = self.input.input_in_array_of_int(
+            "Entrer l'id du contact support : ", support_id_list)
+        return choice
+
     def update_event(self, event):
         print("Taper Entrée pour conserver la valeur sans modification")
         name = self.input.check_string(f"Name ({event.name}) : ", updated=True) or event.name

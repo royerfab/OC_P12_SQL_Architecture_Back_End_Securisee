@@ -1,7 +1,7 @@
 from models.config import session
 from models.models import Event, User, Contract
 from views.events import EventView
-from utils.decorators import login_required, manager_required, sales_required, support_required, sales_or_manager_required
+from utils.decorators import login_required, manager_required, sales_required, support_required
 from .authentication import AuthenticationController
 from datetime import datetime
 
@@ -11,9 +11,10 @@ class EventController:
         self.event_view = EventView()
         self.auth_controller = AuthenticationController()
 
-    #Création d'un événement uniquement par un commercial, pour un de ses clients et si le contrat est signé
-    #On filtre les contrats en récupérant l'id du contrat puis son client puis l'id de son commercial, s'il est le même que le commercial connecté alors c'est bon
-    #if status vérifie qu'il soit True dans la base de donnée MySQL
+    # Création d'un événement uniquement par un commercial, pour un de ses clients et si le contrat est signé
+    # On filtre les contrats en récupérant l'id du contrat puis son client puis l'id de son commercial,
+    # s'il est le même que le commercial connecté alors c'est bon
+    # if status vérifie qu'il soit True dans la base de donnée MySQL
     @login_required
     @sales_required
     def create_event(self):
@@ -42,6 +43,7 @@ class EventController:
             )
             session.add(new_event)
             session.commit()
+            return new_event
         else:
             print("Le contrat sélectionné n'est pas signé ou ce n'est pas votre client")
 
@@ -50,13 +52,13 @@ class EventController:
         events = session.query(Event).all()
         self.event_view.display_events(events)
 
-    #Affiche les événements d'un support.
+    # Affiche les événements d'un support.
     @login_required
     @support_required
     def display_my_events(self):
         current_user = self.auth_controller.get_current_user()
         events = session.query(Event).filter_by(support_id=current_user.id)
-        if events.count() >0:
+        if events.count() > 0:
             self.event_view.display_events(events)
             return events
         else:
@@ -65,25 +67,26 @@ class EventController:
     @login_required
     @manager_required
     def display_events_no_support(self):
-        events = session.query(Event).filter_by(support_id = None)
-        if events.count() >0:   
-            self.event_view.display_events(events)
-            return events
-        else:
-            return None
-        
-    @login_required
-    @support_required
-    def display_events_by_support(self):
-        current_user = self.auth_controller.get_current_user()
-        events = session.query(Event).filter_by(support_id = current_user.id)
-        if events.count() >0:   
+        events = session.query(Event).filter_by(support_id=None)
+        if events.count() > 0:
             self.event_view.display_events(events)
             return events
         else:
             return None
 
-    #Je prends les événements avec display_event_no_support, je récupère les événements, je choisi le support en récupérant les user avec query,
+    @login_required
+    @support_required
+    def display_events_by_support(self):
+        current_user = self.auth_controller.get_current_user()
+        events = session.query(Event).filter_by(support_id=current_user.id)
+        if events.count() > 0:
+            self.event_view.display_events(events)
+            return events
+        else:
+            return None
+
+    # Je prends les événements avec display_event_no_support, je récupère les événements,
+    # je choisi le support en récupérant les user avec query,
     # je modifie les events avec event.support_id pour assigner le support à l'event
     @login_required
     @manager_required
@@ -125,7 +128,7 @@ class EventController:
             if event_date_end:
                 event_date_end = datetime.strptime(event_date_end, "%Y-%m-%d")
                 event.event_date_end = event_date_end
-            
+
             event.name = name
             event.location = location
             event.attendees = attendees
@@ -136,7 +139,9 @@ class EventController:
     @manager_required
     def delete_event(self):
         self.display_events()
-        event_id = self.event_view.get_event_id()
-        event = session.query(Event).filter_by(id = event_id).first()
+        events = session.query(Event).all()
+        event_id_list = [event.id for event in events]
+        event_id = self.event_view.get_event_id(event_id_list)
+        event = session.query(Event).filter_by(id=event_id).first()
         session.delete(event)
         session.commit()

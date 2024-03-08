@@ -6,8 +6,6 @@ from .events import EventController
 from .authentication import AuthenticationController
 
 
-
-
 class MainController:
     def __init__(self):
         self.menu_view = MenuView()
@@ -16,7 +14,7 @@ class MainController:
         self.contract_controller = ContractController()
         self.event_controller = EventController()
         self.auth_controller = AuthenticationController()
-    
+
     def start(self):
         while True:
             choice = self.menu_view.main_menu()

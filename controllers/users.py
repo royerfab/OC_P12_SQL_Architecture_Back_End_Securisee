@@ -16,13 +16,14 @@ class UserController:
     def create_user(self):
         username, password, role = self.user_view.get_user_data()
         new_user = User(
-            username = username,
-            password = password,
-            role = role
+            username=username,
+            password=password,
+            role=role
         )
         new_user.set_password(password)
         session.add(new_user)
         session.commit()
+        return new_user
 
     @login_required
     def display_users(self):
@@ -36,8 +37,8 @@ class UserController:
         users = session.query(User).all()
         user_id_list = [user.id for user in users]
         user_id = self.user_view.get_user_id(user_id_list)
-        user = session.query(User).filter_by(id = user_id).first()
-        username, password= self.user_view.update_user(user)
+        user = session.query(User).filter_by(id=user_id).first()
+        username, password = self.user_view.update_user(user)
         user.username = username
         if password:
             user.password = password
@@ -48,8 +49,9 @@ class UserController:
     @manager_required
     def delete_user(self):
         self.display_users()
-        user_id = self.user_view.get_user_id()
-        user = session.query(User).filter_by(id = user_id).first()
+        users = session.query(User).all()
+        user_id_list = [user.id for user in users]
+        user_id = self.user_view.get_user_id(user_id_list)
+        user = session.query(User).filter_by(id=user_id).first()
         session.delete(user)
         session.commit()
-
